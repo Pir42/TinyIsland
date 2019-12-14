@@ -145,9 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const index = getRandomArbitrary(0, tree_meshs.length-1)
     let tree = tree_meshs[index].clone();
     const scale = getRandomArbitrary(3, 7)/100;
+    const rotation = getRandomArbitrary(0, Math.PI)
     tinyisland.add(tree)
     tree.position.set(intersect_point.x, ground.position.y, intersect_point.z)
     tree.scale.set(scale, scale, scale)
+    tree.rotation.set(-Math.PI/2,0,rotation)
   }
  })
 });
