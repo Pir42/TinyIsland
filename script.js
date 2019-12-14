@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('Initialized app');
 
   let tree_meshs = [];
+  let raycaster = new THREE.Raycaster()
+  let mouse = new THREE.Vector2();
 
   let scene = new THREE.Scene();
   scene.background = new THREE.Color( 0xfefefe )
@@ -82,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 
-  let tree_files = ["TreeBase", "Tree02", "Tree03", "Tree04"]
+  let tree_files = ["TreeBase", "Tree02", "Tree03"]
 
   let tree_cpt = 0
   const tree_addcpt = () => {
@@ -131,4 +133,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     );
  }
+
+ document.querySelector("#tinyisland").addEventListener("click", (e) => {
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  raycaster.setFromCamera( mouse, camera );
+	// calculate objects intersecting the picking ray
+  var intersects = raycaster.intersectObjects( [ground] );
+  if(intersects.length){
+    let intersect_point = intersects[0].point
+    const index = getRandomArbitrary(0, tree_meshs.length-1)
+    let tree = tree_meshs[index].clone();
+    const scale = getRandomArbitrary(3, 7)/100;
+    tinyisland.add(tree)
+    tree.position.set(intersect_point.x, ground.position.y, intersect_point.z)
+    tree.scale.set(scale, scale, scale)
+  }
+ })
 });
