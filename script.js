@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // do your setup here
   console.log('Initialized app');
 
+  let tree_meshs = [];
+
   let scene = new THREE.Scene();
   scene.background = new THREE.Color( 0xfefefe )
 
@@ -72,23 +74,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
   scene.add( tinyisland );
 
-  loadFBX("./fbx/TreeBase.FBX", (object) => {
+  const treatmentFBXTree = (object) => {
     object.traverse((node) => {
       if(node.isMesh){
-        node.material.color = new THREE.Color(0xff0000);
-        node.position.x = 0;
-        node.position.y = 0;
-        node.position.z = 0;
+        tree_meshs.push(node)
       }
     })
-    object.position.x = 0;
-    object.position.y = 0;
-    object.position.z = 0;
+  }
 
-    console.log("object ready !")
-    scene.add(object);
-    object.scale.x = object.scale.y = object.scale.z = .1;
-    console.log(object)
+  let tree_files = ["TreeBase", "Tree02", "Tree03", "Tree04"]
+
+  let tree_cpt = 0
+  const tree_addcpt = () => {
+    tree_cpt++
+    if(tree_cpt == tree_files.length){
+      let event = new CustomEvent("tinyisland_trees-ready")
+      document.body.dispatchEvent(event)
+    }
+  }
+
+  tree_files.forEach((file) => {
+    loadFBX("./fbx/"+ file +".FBX", (object) => {
+      treatmentFBXTree(object)
+      tree_addcpt();
+    })
+  })
+
+  document.body.addEventListener("tinyisland_trees-ready", () => {
+    console.log("trees are ready !")
   })
 
   animate();
