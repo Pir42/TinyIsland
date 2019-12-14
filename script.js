@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let island = new THREE.Mesh( islandGeo, material );
   let groundGeo = new THREE.CircleGeometry( radius, segments, Math.PI/2 );
   let ground =  new THREE.Mesh(groundGeo);
-  ground.material.color = new THREE.Color(0x0000aa)
+  ground.material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0})
 
   island.geometry.computeBoundingBox();
   let box = island.geometry.boundingBox.clone();
@@ -147,6 +147,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const scale = getRandomArbitrary(3, 7)/100;
     const rotation = getRandomArbitrary(0, Math.PI)
     tinyisland.add(tree)
+    tree.material = new THREE.MeshPhongMaterial({
+      color: new THREE.Color(0x8BC34A),
+      specular: new THREE.Color(0xAED581),
+      shininess: 1,
+      flatShading: true
+    })
     tree.position.set(intersect_point.x, ground.position.y, intersect_point.z)
     tree.scale.set(scale, scale, scale)
     tree.rotation.set(-Math.PI/2,0,rotation)
