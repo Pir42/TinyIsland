@@ -156,6 +156,14 @@ document.addEventListener('DOMContentLoaded', () => {
     tree.position.set(intersect_point.x, ground.position.y, intersect_point.z)
     tree.scale.set(scale, scale, scale)
     tree.rotation.set(-Math.PI/2,0,rotation)
+
+    let base = new THREE.CircleGeometry(scale*500, getRandomArbitrary(5, 14));
+    let base_material = new THREE.MeshPhongMaterial({
+      color: new THREE.Color(0xFF8A65),
+    })
+    let base_mesh = new THREE.Mesh(base, base_material)
+    tree.add(base_mesh);
+    base_mesh.position.set(0,0,0)
   }
  })
 });
