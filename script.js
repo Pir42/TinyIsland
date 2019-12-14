@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let raycaster = new THREE.Raycaster()
   let mouse = new THREE.Vector2();
 
+  let needAnimate = false;
+  let toAnimate = null;
+
   let scene = new THREE.Scene();
   scene.background = new THREE.Color( 0xfefefe )
 
@@ -108,9 +111,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   animate();
 
+  let animfct = 1
   function animate() {
     requestAnimationFrame( animate );
     tinyisland.rotation.y += .001
+    if(needAnimate){
+      if(toAnimate.scale.x < 1){
+        toAnimate.scale.x += animfct*.03
+        toAnimate.scale.y += animfct*.03
+        toAnimate.scale.z += animfct*.03
+        animfct *= 1.03
+      } else {
+        needAnimate = false;
+        toAnimate = null;
+        animfct = 1
+      }
+    }
     controls.update();
     renderer.render( scene, camera );
   }
@@ -148,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rotation = getRandomArbitrary(0, Math.PI)
     tinyisland.add(tree)
     tree.material = new THREE.MeshPhongMaterial({
-      color: new THREE.Color(0x8BC34A),
+      color: new THREE.Color(0xAED581),
       specular: new THREE.Color(0xAED581),
       shininess: 1,
       flatShading: true
@@ -159,11 +175,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let base = new THREE.CircleGeometry(scale*500, getRandomArbitrary(5, 14));
     let base_material = new THREE.MeshPhongMaterial({
-      color: new THREE.Color(0xFF8A65),
+      color: new THREE.Color(0xFF7043),
     })
     let base_mesh = new THREE.Mesh(base, base_material)
     tree.add(base_mesh);
-    base_mesh.position.set(0,0,0)
+    base_mesh.position.set(0,0,0);
+    base_mesh.scale.set(0, 0, 0);
+    needAnimate = true;
+    toAnimate = base_mesh;
   }
  })
 });
